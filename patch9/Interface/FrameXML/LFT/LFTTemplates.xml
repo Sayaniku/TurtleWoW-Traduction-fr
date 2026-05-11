@@ -1,0 +1,314 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Button name="LFTRoleButtonTemplate" virtual="true">
+		<Size x="64" y="64"/>
+		<Layers>
+			<Layer level="BORDER">
+				<Texture name="$parentIcon" setAllPoints="true"/>
+			</Layer>
+		</Layers>
+		<HighlightTexture file="Interface\Buttons\IconBorder-GlowRing" alphaMode="ADD"/>
+		<Frames>
+			<CheckButton name="$parentCheckButton" inherits="UICheckButtonTemplate" checked="false" hidden="true" toplevel="true">
+				<Size x="24" y="24"/>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT">
+						<Offset x="0" y="-5"/>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						this:SetID(this:GetParent():GetID())
+					</OnLoad>
+					<OnClick>
+						LFT_QueueAs(this:GetID())
+						PlayClickSound()
+					</OnClick>
+					<OnEnter>
+						local parent = this:GetParent()
+						parent:LockHighlight()
+						GameTooltip:SetOwner(parent, "ANCHOR_RIGHT")
+						GameTooltip:SetText(parent.tooltip, nil, nil, nil, nil, true)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						this:GetParent():UnlockHighlight()
+						GameTooltip:Hide()
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Scripts>
+			<OnClick>
+				_G[this:GetName() .. "CheckButton"]:Click()
+			</OnClick>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+				GameTooltip:SetText(this.tooltip, nil, nil, nil, nil, true)
+				GameTooltip:Show()
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide()
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<Frame name="LFTInstanceEntryTemplate" virtual="true">
+		<Size x="293" y="21"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentHighlight" file="Interface\Buttons\UI-Listbox-Highlight2" setAllPoints="true" hidden="true"/>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString name="$parentName" inherits="GameFontNormal" justifyH="LEFT">
+					<Size x="200" y="24"/>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset x="20" y="0"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentLevels" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size x="72" y="24"/>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset x="-6" y="0"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<CheckButton name="$parentCheckButton" inherits="UICheckButtonTemplate">
+				<HitRectInsets left="0" right="-280" top="0" bottom="0"/>
+				<Size  x="20" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						LFT_QueueFor(this:GetParent().instance)
+						PlayClickSound()
+					</OnClick>
+					<OnEnter>
+						local parent = this:GetParent()
+						parent.highlight:Show()
+						parent.name:SetTextColor(1, 1, 1)
+						parent.levels:SetTextColor(1, 1, 1)
+					</OnEnter>
+					<OnLeave>
+						local parent = this:GetParent()
+						local r, g, b = parent.r, parent.g, parent.b
+						parent.highlight:Hide()
+						parent.name:SetTextColor(r, g, b)
+						parent.levels:SetTextColor(r, g, b)
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				this.name = _G[this:GetName().."Name"]
+				this.levels = _G[this:GetName().."Levels"]
+				this.highlight = _G[this:GetName().."Highlight"]
+				this.checkButton = _G[this:GetName().."CheckButton"]
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	<Button name="LFTGroupEntryTemplate" virtual="true" hidden="true">
+		<Size x="285" y="31"/>
+		<ButtonText name="$parentText" justifyH="LEFT">
+			<Size x="132" y="22"/>
+			<Anchors>
+				<Anchor point="TOPLEFT">
+					<Offset x="-2" y="2"/>
+				</Anchor>
+			</Anchors>
+		</ButtonText>
+		<NormalFont inherits="GameFontNormal" justifyH="LEFT"/>
+		<HighlightFont inherits="GameFontHighlight" justifyH="LEFT"/>
+		<DisabledFont inherits="GameFontDisable" justifyH="LEFT"/>
+		<Backdrop bgFile="Interface\Buttons\WHITE8x8" tile="true">
+			<BackgroundInsets left="-8" right="-4" top="2" bottom="0"/>
+			<Color r="0.8" g="0.8" b="0.8" a="0.1"/>
+		</Backdrop>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentHighlight" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD" setAllPoints="true" hidden="true"/>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRole3Number" inherits="GameFontNormalSmall">
+					<Size x="0" y="24"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT">
+							<Offset x="0" y="2"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentRole3Icon" file="Interface\FrameXML\LFT\images\ready_damage">
+					<Size x="12" y="12"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentRole3Number" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentRole2Number" inherits="GameFontNormalSmall">
+					<Size x="0" y="24"/>
+					 <Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentRole3Icon" relativePoint="LEFT">
+							<Offset x="-8" y="0"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentRole2Icon" file="Interface\FrameXML\LFT\images\ready_healer">
+					<Size x="12" y="12"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentRole2Number" relativePoint="LEFT">
+							<Offset x="-1" y="0"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentRole1Number" inherits="GameFontNormalSmall">
+					<Size x="0" y="24"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentRole2Icon" relativePoint="LEFT">
+							<Offset x="-8" y="0"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentRole1Icon" file="Interface\FrameXML\LFT\images\ready_tank">
+					<Size x="12" y="12"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentRole1Number" relativePoint="LEFT">
+							<Offset x="-1" y="0"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentSubText" inherits="GameFontDisableSmall" justifyH="LEFT">
+					<Size x="200" y="20"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT">
+							<Offset x="-2" y="-4"/>
+						</Anchor>
+					</Anchors>
+					<Color r="0.8" g="0.8" b="0.8"/>
+				</FontString>
+				<Texture name="$parentLeaderIcon" file="Interface\GroupFrame\UI-Group-LeaderIcon">
+					<Size x="12" y="12"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentLeaderText" inherits="GameFontHighlightSmall" justifyH="RIGHT">
+					<Size x="100" y="22"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentLeaderIcon" relativePoint="LEFT">
+							<Offset x="-1" y="0"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			</OnLoad>
+			<OnEnter>
+				_G[this:GetName().."Highlight"]:Show()
+				if this.title then
+					GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+					GameTooltip:SetText(this.title, 1, 1, 1, 1, true)
+					GameTooltip:AddLine(this.description, 1, 0.82, 0, 1, true)
+					GameTooltip:Show()
+				end
+			</OnEnter>
+			<OnLeave>
+				if not this.selected then
+					_G[this:GetName().."Highlight"]:Hide()
+				end
+				GameTooltip:Hide()
+			</OnLeave>
+			<OnClick>
+				LFTGroupEntry_OnClick()
+			</OnClick>
+		</Scripts>
+	</Button>
+	<EditBox name="LFTRoleLimitInputBoxTemplate" letters="2" historyLines="0" numeric="true" autoFocus="false" virtual="true">
+		<Size x="26" y="20"/>
+		<TextInsets left="2" right="0" top="0" bottom="0"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentLeft">
+					<Size x="8" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="-6" y="0"/>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.0625" top="0" bottom="0.625"/>
+				</Texture>
+				<Texture name="$parentRight" file="Interface\Common\Common-Input-Border">
+					<Size x="8" y="20"/>
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.9375" right="1.0" top="0" bottom="0.625"/>
+				</Texture>
+				<Texture name="$parentMiddle" file="Interface\Common\Common-Input-Border">
+					<Size x="10" y="20"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
+					</Anchors>
+					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625"/>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture name="$parentIcon">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset x="-24" y="0"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnterPressed>
+				this:ClearFocus()
+			</OnEnterPressed>
+			<OnEscapePressed>
+				this:ClearFocus()
+			</OnEscapePressed>
+			<OnEditFocusLost>
+				this:HighlightText(0, 0)
+			</OnEditFocusLost>
+			<OnEditFocusGained>
+				this:HighlightText()
+			</OnEditFocusGained>
+		</Scripts>
+		<FontString inherits="ChatFontNormal" justifyH="CENTER"/>
+	</EditBox>
+	<StatusBar name="LFTTimerTemplate" drawLayer="BACKGROUND" minValue="0" maxValue="90000" defaultValue="0" virtual="true">
+		<Size x="152" y="10"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder">
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset x="-5" y="0"/>
+						</Anchor>
+						<Anchor point="RIGHT">
+							<Offset x="5" y="0"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnUpdate>
+				LFT_Timer_OnUpdate(arg1)
+			</OnUpdate>
+		</Scripts>
+		<BarTexture name="$parentBar" file="Interface\PaperDollInfoFrame\UI-Character-Skills-Bar"/>
+		<BarColor r="1.0" g="1.0" b="0"/>
+	</StatusBar>
+</Ui>
